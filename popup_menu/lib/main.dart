@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:popup_menu/near_me.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 void main(List<String> args) {
@@ -45,32 +48,51 @@ class _MyHomePageState extends State<MyHomePage> {
                       tileColor: Colors.amber,
                       trailing: const Icon(Icons.facebook),
                     )),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                         child: ListTile(
-                      title: Text('Near me', style: TextStyle(fontSize: 20)),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const NearMe()),
+                        );
+                      },
+                      title:
+                          const Text('Near me', style: TextStyle(fontSize: 20)),
                       tileColor: Colors.blue,
-                      trailing: Icon(Icons.near_me),
+                      trailing: const Icon(Icons.near_me),
                     )),
                     const PopupMenuDivider(),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                         child: ListTile(
-                      title: Text('Instagram', style: TextStyle(fontSize: 20)),
+                      onTap: () {
+                        launch('https://www.instagram.com/');
+                      },
+                      title: const Text('Instagram',
+                          style: TextStyle(fontSize: 20)),
                       tileColor: Colors.red,
-                      trailing: Icon(Icons.account_balance_sharp),
+                      trailing: const Icon(Icons.account_balance_sharp),
                     )),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       child: ListTile(
-                        title: Text('Google', style: TextStyle(fontSize: 20)),
+                        onTap: () {
+                          launch('https://www.google.com/');
+                        },
+                        title: const Text('Google',
+                            style: TextStyle(fontSize: 20)),
                         tileColor: Colors.green,
-                        trailing: Icon(Icons.golf_course),
+                        trailing: const Icon(Icons.golf_course),
                       ),
                     ),
                     const PopupMenuDivider(),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                         child: ListTile(
-                      title: Text('Logout', style: TextStyle(fontSize: 20)),
+                      onTap: () {
+                        exit(0);
+                      },
+                      title: const Text('Exit', style: TextStyle(fontSize: 20)),
                       tileColor: Colors.purple,
-                      trailing: Icon(Icons.exit_to_app),
+                      trailing: const Icon(Icons.exit_to_app),
                     )),
                   ])
         ],
