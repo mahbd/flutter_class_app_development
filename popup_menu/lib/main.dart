@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:popup_menu/near_me.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -75,9 +76,24 @@ class _MyHomePageState extends State<MyHomePage> {
                     )),
                     PopupMenuItem(
                       child: ListTile(
-                        onTap: () {
-                          launch('https://www.google.com/');
-                        },
+                        onTap: () => showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                                  title: const Text('Google'),
+                                  content: const Text(
+                                      'You will be redirected to google'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, 'Cancel'),
+                                      child: const Text("Cancel"),
+                                    ),
+                                    TextButton(
+                                        onPressed: () =>
+                                            launch("https://google.com/"),
+                                        child: const Text('Ok'))
+                                  ],
+                                )),
                         title: const Text('Google',
                             style: TextStyle(fontSize: 20)),
                         tileColor: Colors.green,
@@ -88,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     PopupMenuItem(
                         child: ListTile(
                       onTap: () {
-                        exit(0);
+                        SystemNavigator.pop();
                       },
                       title: const Text('Exit', style: TextStyle(fontSize: 20)),
                       tileColor: Colors.purple,
