@@ -13,7 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     // wait for two seconds and run
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 0), () {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => HomeScreen()));
     });

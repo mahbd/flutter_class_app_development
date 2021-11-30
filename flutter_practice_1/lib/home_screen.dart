@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_practice_1/store.dart';
+
+import 'popup_menu.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -14,7 +17,21 @@ class _HomeScreenState extends State<HomeScreen> {
     {'text': 'Group', 'icon': const Icon(Icons.group)},
     {'text': 'Contacts', 'icon': const Icon(Icons.contacts)}
   ];
-  final int index = 0;
+
+  int _index = 0;
+
+  void changeIndex(int index) {
+    setState(() {
+      _index = index;
+    });
+  }
+
+  List<Widget> bodyElements = [
+    const Center(
+      child: Text('Main Home Screen'),
+    ),
+    const StoreCounter(),
+  ];
 
   List<Widget> createAppDrawerElements() {
     List<Widget> toReturn = [];
@@ -32,14 +49,42 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('App Drawer'),
-          actions: [],
+      appBar: AppBar(
+        title: const Text('App Drawer'),
+        actions: [
+          TextButton(
+            child: const PopUpMenu(),
+            onPressed: () {},
+          )
+        ],
+      ),
+      drawer: Drawer(
+        child: Column(
+          children: createAppDrawerElements(),
         ),
-        drawer: Drawer(
-          child: Column(
-            children: createAppDrawerElements(),
+      ),
+      body: bodyElements[_index],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _index,
+        onTap: changeIndex,
+        type: BottomNavigationBarType.shifting,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.home,
+              color: Colors.blue,
+            ),
+            label: 'Home',
           ),
-        ));
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.store,
+              color: Colors.red,
+            ),
+            label: 'Store',
+          ),
+        ],
+      ),
+    );
   }
 }
