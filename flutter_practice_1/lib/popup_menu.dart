@@ -27,13 +27,15 @@ class _PopUpMenuState extends State<PopUpMenu> {
           onTap: () => launch('https://facebook.com/'),
         ),
         PopupMenuItem(
-          child: const ListTile(
-            leading: Icon(Icons.near_me),
-            title: Text('Near me'),
-          ),
-          onTap: () => Navigator.push(
-              context, MaterialPageRoute(builder: (context) => const NearMe())),
-        ),
+            child: const ListTile(
+              leading: Icon(Icons.near_me),
+              title: Text('Near me'),
+            ),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return NearMe();
+              }));
+            }),
       ],
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_practice_1/near_me.dart';
 import 'package:flutter_practice_1/store.dart';
 
 import 'popup_menu.dart';
@@ -26,13 +27,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  List<Widget> bodyElements = [
-    const Center(
-      child: Text('Main Home Screen'),
-    ),
-    const StoreCounter(),
-  ];
-
   List<Widget> createAppDrawerElements() {
     List<Widget> toReturn = [];
     for (int i = 0; i < appDrawerElements.length; i++) {
@@ -48,6 +42,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> bodyElements = [
+      Center(
+        child: Column(
+          children: [
+            Text('Main Home Screen'),
+            TextButton(
+              onPressed: () {
+                // go to NearMe page using material page route
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return NearMePage();
+                }));
+              },
+              child: const Text('Go to near me'),
+            )
+          ],
+        ),
+      ),
+      const StoreCounter(),
+    ];
     return Scaffold(
       appBar: AppBar(
         title: const Text('App Drawer'),
