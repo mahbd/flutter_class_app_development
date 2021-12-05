@@ -33,7 +33,7 @@ class _PopUpMenuState extends State<PopUpMenu> {
             ),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return NearMe();
+                return NearMePage();
               }));
             }),
       ],

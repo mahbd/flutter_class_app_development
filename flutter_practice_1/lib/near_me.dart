@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class NearMe extends StatefulWidget {
-  const NearMe({Key? key}) : super(key: key);
+class NearMePage extends StatefulWidget {
+  const NearMePage({Key? key}) : super(key: key);
 
   @override
-  _NearMeState createState() => _NearMeState();
+  _NearMePageState createState() => _NearMePageState();
 }
 
-class _NearMeState extends State<NearMe> {
+class _NearMePageState extends State<NearMePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
