@@ -10,87 +10,99 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  bool isVisible = true;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isVisible = true, _isEmpty = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.green,
-      appBar: MyAppBar(),
+      appBar: const MyAppBar(),
       body: Container(
-        padding: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-        constraints: BoxConstraints.expand(),
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+        constraints: const BoxConstraints.expand(),
         color: Colors.white,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               'Welcome',
               style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
             ),
-            SizedBox(
+            const SizedBox(
               height: 16,
             ),
             const Text(
-              'A mobile application, also referred to as a mobile app or simply an app, '
-              'is a computer program or software application designed to run on a mobile device such as a phone, tablet, or watch',
+              'A mobile application, also referred to as a mobile app or simply an app, is a computer program or software application designed to run on a mobile device such as a phone, tablet, or watch',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
               textAlign: TextAlign.center,
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             TextField(
-              controller: emailController,
+              controller: _emailController,
+              onChanged: (value) => setState(() {
+                _isEmpty = value.isEmpty;
+              }),
               decoration: InputDecoration(
                 labelText: 'Email',
                 hintText: 'abc@gmail.com',
-                prefixIcon: Icon(Icons.email),
-                suffixIcon: InkWell(
+                prefixIcon: const Icon(Icons.email),
+                suffixIcon: GestureDetector(
                   onTap: () {
-                    emailController.clear();
+                    _emailController.clear();
+                    setState(() {
+                      _isEmpty = true;
+                    });
                   },
-                  child: Icon(Icons.clear),
+                  child: !_isEmpty
+                      ? const Icon(Icons.clear)
+                      : const Icon(Icons.hourglass_empty),
                 ),
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             TextField(
-              controller: passwordController,
-              obscureText: isVisible,
+              controller: _passwordController,
+              obscureText: _isVisible,
               decoration: InputDecoration(
                 labelText: 'Enter Your Password',
-                prefixIcon: Icon(Icons.password),
-                suffixIcon: InkWell(
+                prefixIcon: const Icon(Icons.lock),
+                suffixIcon: GestureDetector(
                   onTap: () {
                     setState(() {
-                      isVisible = !isVisible;
+                      _isVisible = !_isVisible;
                     });
                   },
-                  child: Icon(Icons.visibility),
+                  child: _isVisible
+                      ? const Icon(Icons.visibility)
+                      : const Icon(Icons.visibility_off),
                 ),
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             OutlinedButton(
               style: OutlinedButton.styleFrom(
-                shape: StadiumBorder(),
-                backgroundColor: Colors.cyanAccent,
+                shape: const StadiumBorder(),
+                backgroundColor: Colors.blue,
               ),
-              onPressed: () {},
-              child: Padding(
+              onPressed: () {
+                print(_emailController.text);
+                print(_passwordController.text);
+              },
+              child: const Padding(
                 padding: EdgeInsets.symmetric(vertical: 15, horizontal: 50),
-                child: Text('login'),
+                child: Text('login', style: TextStyle(color: Colors.white)),
               ),
             )
           ],
