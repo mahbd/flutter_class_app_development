@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+
+import 'add_task_dialog.dart';
+import 'task_card.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -8,111 +12,50 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
-
-  final List<TaskCard> _tasks = [
-    const TaskCard(title: 'This is an example of task', date: '01-10-2021'),
+  final List<Map<String, String>> _tasks = [
+    {'title': 'This is an example of task', 'date': '01-10-2021'},
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () => addTask(),
+        onPressed: () => addTaskWidget(),
         child: const Icon(Icons.add),
       ),
       appBar: AppBar(),
       body: Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.grey.shade200,
-          child: Column(
-            children: _tasks,
-          )),
+        padding: const EdgeInsets.all(8),
+        color: Colors.grey.shade200,
+        child: ListView.builder(
+            itemCount: _tasks.length,
+            itemBuilder: (context, index) {
+              return TaskCard(
+                title: _tasks[index]['title']!,
+                date: _tasks[index]['date']!,
+                onDelete: () => deleteTask(index),
+              );
+            }),
+      ),
     );
   }
 
-  addTask() {
+  addTaskWidget() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Alert Dialog'),
-        content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('Task title'),
-              const SizedBox(
-                height: 10,
-              ),
-              TextField(
-                controller: _titleController,
-                decoration: const InputDecoration(border: OutlineInputBorder()),
-              ),
-              const Text('Task date'),
-              const SizedBox(
-                height: 10,
-              ),
-              TextField(
-                controller: _dateController,
-                decoration: const InputDecoration(border: OutlineInputBorder()),
-              ),
-            ]),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('Add'),
-            onPressed: () => {
-              setState(() {
-                _tasks.add(TaskCard(
-                    title: _titleController.text, date: _dateController.text));
-                _titleController.clear();
-                _dateController.clear();
-                Navigator.pop(context);
-              })
-            },
-          ),
-          TextButton(
-            onPressed: () => {
-              _titleController.clear(),
-              _dateController.clear(),
-              Navigator.of(context).pop(),
-            },
-            child: const Text('Cancel'),
-          )
-        ],
-      ),
+      builder: (context) => AddTaskDialog(addTask: addTask),
     );
   }
-}
 
-class TaskCard extends StatefulWidget {
-  const TaskCard({
-    Key? key,
-    required this.title,
-    required this.date,
-  }) : super(key: key);
+  void addTask(String title, String date) {
+    setState(() {
+      _tasks.add({'title': title, 'date': date});
+    });
+  }
 
-  final String title;
-  final String date;
-
-  @override
-  _TaskCardState createState() => _TaskCardState();
-}
-
-class _TaskCardState extends State<TaskCard> {
-  bool completed = false;
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        onTap: () => setState(() => completed = !completed),
-        leading: const CircleAvatar(),
-        title: Text(widget.title),
-        subtitle: Text('Date: ${widget.date}'),
-        trailing: !completed
-            ? const Icon(Icons.check_box_outline_blank)
-            : const Icon(Icons.check_box),
-      ),
-    );
+  void deleteTask(int index) {
+    setState(() {
+      _tasks.removeAt(index);
+    });
   }
 }
