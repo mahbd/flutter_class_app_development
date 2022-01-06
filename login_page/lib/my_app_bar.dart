@@ -6,15 +6,12 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text('Login Page'),
-      leading: Icon(Icons.home),
+      title: const Text('Login Page'),
+      leading: const Icon(Icons.home),
       centerTitle: true,
     );
   }
 
   @override
-  // TODO: implement preferredSize
-  Size get preferredSize => Size.fromHeight(60);
+  Size get preferredSize => const Size.fromHeight(60);
 }
-
-

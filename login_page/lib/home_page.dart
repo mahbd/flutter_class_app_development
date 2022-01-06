@@ -50,16 +50,16 @@ class _HomePageState extends State<HomePage> {
                 labelText: 'Email',
                 hintText: 'abc@gmail.com',
                 prefixIcon: const Icon(Icons.email),
-                suffixIcon: GestureDetector(
-                  onTap: () {
+                suffixIcon: IconButton(
+                  onPressed: () {
                     _emailController.clear();
                     setState(() {
                       _isEmpty = true;
                     });
                   },
-                  child: !_isEmpty
+                  icon: !_isEmpty
                       ? const Icon(Icons.clear)
-                      : const Icon(Icons.hourglass_empty),
+                      : const Icon(Icons.clear_outlined),
                 ),
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
