@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 import 'add_task_dialog.dart';
 import 'task_card.dart';
@@ -12,9 +11,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<Map<String, String>> _tasks = [
-    {'title': 'This is an example of task', 'date': '01-10-2021'},
+  final List<Map<String, dynamic>> _tasks = [
+    {
+      'title': 'This is an example of task',
+      'date': '01-10-2021',
+      'completed': false
+    },
   ];
+  bool showCompleted = false;
 
   @override
   Widget build(BuildContext context) {
@@ -27,15 +31,31 @@ class _HomePageState extends State<HomePage> {
       body: Container(
         padding: const EdgeInsets.all(8),
         color: Colors.grey.shade200,
-        child: ListView.builder(
-            itemCount: _tasks.length,
-            itemBuilder: (context, index) {
-              return TaskCard(
-                title: _tasks[index]['title']!,
-                date: _tasks[index]['date']!,
-                onDelete: () => deleteTask(index),
-              );
-            }),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: _tasks.length,
+                itemBuilder: (context, index) {
+                  return showCompleted == _tasks[index]['completed']
+                      ? TaskCard(
+                          title: _tasks[index]['title']!,
+                          date: _tasks[index]['date']!,
+                          completed: _tasks[index]['completed']!,
+                          onDelete: () => deleteTask(index),
+                          markAsCompleted: () => changeStatus(index),
+                        )
+                      : Container();
+                },
+              ),
+            ),
+            TextButton(
+                onPressed: () => setState(() {
+                      showCompleted = !showCompleted;
+                    }),
+                child: const Text('Show Completed Tasks')),
+          ],
+        ),
       ),
     );
   }
@@ -49,7 +69,13 @@ class _HomePageState extends State<HomePage> {
 
   void addTask(String title, String date) {
     setState(() {
-      _tasks.add({'title': title, 'date': date});
+      _tasks.add({'title': title, 'date': date, 'completed': false});
+    });
+  }
+
+  void changeStatus(int index) {
+    setState(() {
+      _tasks[index]['completed'] = !_tasks[index]['completed'];
     });
   }
 
