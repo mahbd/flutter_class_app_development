@@ -38,16 +38,19 @@ class _HomePageState extends State<HomePage> {
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: TextField(
-                controller: _cityController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Enter City Name',
+              child: Container(
+                width: 400,
+                child: TextField(
+                  controller: _cityController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Enter City Name',
+                  ),
+                  onSubmitted: (String value) {
+                    weather.cityName = value;
+                    weather.callAPI(_reloader);
+                  },
                 ),
-                onSubmitted: (String value) {
-                  weather.cityName = value;
-                  weather.callAPI(_reloader);
-                },
               ),
             ),
             Padding(
