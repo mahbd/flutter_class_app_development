@@ -5,6 +5,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List category = ['Economic', 'Social', 'Political', 'Cultural', 'Sports'];
     return Scaffold(
         appBar: AppBar(
           title: const Text('Home'),
