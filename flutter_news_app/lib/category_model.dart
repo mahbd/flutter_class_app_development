@@ -28,23 +28,27 @@ class Category {
 
 const List<Category> categories = [
   Category(
-    name: 'Economic',
+    name: 'business',
     color: Color(0xFFFFC107),
   ),
   Category(
-    name: 'Social',
+    name: 'entertainment',
     color: Color(0xFFF44336),
   ),
   Category(
-    name: 'Political',
+    name: 'general',
     color: Color(0xFFE91E63),
   ),
   Category(
-    name: 'Cultural',
+    name: 'technology',
     color: Color(0xFF9C27B0),
   ),
   Category(
-    name: 'Sports',
+    name: 'science',
     color: Color(0xFF673AB7),
+  ),
+  Category(
+    name: 'sports',
+    color: Color(0xFF3F51B5),
   ),
 ];

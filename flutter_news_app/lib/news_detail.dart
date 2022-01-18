@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:date_time_format/date_time_format.dart';
+import 'package:flutter_news_app/news_model.dart';
 
-class NewsDescription extends StatelessWidget {
-  const NewsDescription({Key? key, required this.newsId}) : super(key: key);
-  final int newsId;
+class NewsDetail extends StatefulWidget {
+  const NewsDetail({Key? key, required this.news, required this.toggleFeatured})
+      : super(key: key);
+  final News news;
+  final Function toggleFeatured;
 
   @override
+  State<NewsDetail> createState() => _NewsDetailState();
+}
+
+class _NewsDetailState extends State<NewsDetail> {
+  @override
   Widget build(BuildContext context) {
+    Icon featuredIcon = widget.news.isFeatured
+        ? const Icon(Icons.star)
+        : const Icon(Icons.star_border);
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
@@ -14,30 +26,33 @@ class NewsDescription extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              children: const [
-                Text('Saturday 12th of December 2021.',
-                    style: TextStyle(
+              children: [
+                Text(widget.news.publishedAt.format(DateTimeFormats.american),
+                    style: const TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
                         fontWeight: FontWeight.bold)),
-                Text('Economy',
-                    style: TextStyle(
+                Text('.${widget.news.category?.name}',
+                    style: const TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
                         fontWeight: FontWeight.bold)),
               ],
             ),
-            const Text('How to redisgn 175 years old newspaper.',
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-            Image.network(
-              'https://picsum.photos/id/1/${MediaQuery.of(context).size.width.toInt() - 30}/200',
+            Text(widget.news.title,
+                style:
+                    const TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.3,
+              width: MediaQuery.of(context).size.width - 15,
+              child: Image.network(widget.news.urlToImage, fit: BoxFit.cover),
             ),
-            const Expanded(
+            Expanded(
               child: Padding(
-                padding: EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
-                  'Hello world. This is Bangladesh',
-                  style: TextStyle(fontSize: 17),
+                  widget.news.description,
+                  style: const TextStyle(fontSize: 17),
                 ),
               ),
             ),
@@ -70,15 +85,15 @@ class NewsDescription extends StatelessWidget {
                   icon: const Icon(Icons.share),
                 ),
                 IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.star),
+                  onPressed: () {
+                    widget.toggleFeatured();
+                    setState(() {});
+                  },
+                  icon: featuredIcon,
                 ),
                 IconButton(
                   onPressed: () {},
-                  icon: const Icon(
-                    Icons.more_outlined,
-                    color: Colors.black,
-                  ),
+                  icon: const Icon(Icons.more_time_outlined),
                 ),
               ],
             )
