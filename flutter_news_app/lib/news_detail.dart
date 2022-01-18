@@ -45,7 +45,10 @@ class _NewsDetailState extends State<NewsDetail> {
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.3,
               width: MediaQuery.of(context).size.width - 15,
-              child: Image.network(widget.news.urlToImage, fit: BoxFit.cover),
+              child: Hero(
+                tag: 'news_${widget.news.id}',
+                child: Image.network(widget.news.urlToImage, fit: BoxFit.cover),
+              ),
             ),
             Expanded(
               child: Padding(
