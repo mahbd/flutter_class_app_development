@@ -65,4 +65,4 @@ class News {
 }
 
 // list of news
-List<News> newsList = [];
+Map<String, dynamic> newsMap = {'all': {}};

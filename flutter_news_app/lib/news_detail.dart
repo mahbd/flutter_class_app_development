@@ -96,7 +96,7 @@ class _NewsDetailState extends State<NewsDetail> {
                 ),
                 IconButton(
                   onPressed: () {},
-                  icon: const Icon(Icons.more_time_outlined),
+                  icon: const Icon(Icons.more),
                 ),
               ],
             )

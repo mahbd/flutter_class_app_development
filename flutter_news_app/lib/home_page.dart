@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:date_time_format/date_time_format.dart';
 import 'package:http/http.dart' as http;
+import 'package:crypto/crypto.dart';
 
 import 'category_model.dart';
 import 'const.dart';
@@ -28,14 +29,32 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 
+  Category? selectedCategory;
+
   @override
   Widget build(BuildContext context) {
     List<News> featuredNews = [];
-    for (int i = 0; i < newsList.length; i++) {
-      if (newsList[i].isFeatured) {
-        featuredNews.add(newsList[i]);
+    List<News> newsList = [];
+    if (selectedCategory != null) {
+      if (newsMap.containsKey(selectedCategory!.name)) {
+        for (News news in newsMap[selectedCategory!.name]) {
+          if (news.isFeatured) {
+            featuredNews.add(news);
+          }
+          newsList.add(news);
+        }
+      }
+    } else {
+      for (News news in newsMap['all'].values) {
+        if (news.isFeatured) {
+          featuredNews.add(news);
+        }
+        newsList.add(news);
       }
     }
+
+    newsList.sort((a, b) => b.publishedAt.compareTo(a.publishedAt));
+    featuredNews.sort((a, b) => b.publishedAt.compareTo(a.publishedAt));
 
     return Scaffold(
       appBar: AppBar(
@@ -57,22 +76,37 @@ class _HomePageState extends State<HomePage> {
                   );
                 }),
           ),
-          const Padding(
-            padding: EdgeInsets.only(top: 30, bottom: 16, left: 10),
-            child: Text(
-              "Hot Topics",
-              style: TextStyle(
-                  fontSize: 22,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold),
+          Padding(
+            padding: const EdgeInsets.only(top: 30, bottom: 16, left: 10),
+            child: Row(
+              children: [
+                const Text(
+                  "Hot Topics",
+                  style: TextStyle(
+                      fontSize: 22,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
+                ),
+                MaterialButton(
+                    onPressed: () {
+                      setState(() {
+                        selectedCategory = null;
+                      });
+                    },
+                    child: const Text("See All"))
+              ],
             ),
           ),
-          const TopicList(category: categories),
+          TopicList(
+            category: categories,
+            changeCategory: changeCategory,
+          ),
           const SizedBox(
             height: 10,
           ),
           Expanded(
             child: ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
               itemCount: newsList.length,
               itemBuilder: (context, index) {
                 return Card(
@@ -127,15 +161,23 @@ class _HomePageState extends State<HomePage> {
     news.isFeatured = !news.isFeatured;
     setState(() {});
   }
+
+  void changeCategory(Category category) {
+    setState(() {
+      selectedCategory = category;
+    });
+  }
 }
 
 class TopicList extends StatelessWidget {
   const TopicList({
     Key? key,
     required this.category,
+    required this.changeCategory,
   }) : super(key: key);
 
   final List<Category> category;
+  final Function changeCategory;
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +194,9 @@ class TopicList extends StatelessWidget {
             minWidth: 100,
             shape: const StadiumBorder(),
             color: category[index].color,
-            onPressed: () {},
+            onPressed: () {
+              changeCategory(category[index]);
+            },
             child: Text(
               category[index].name,
               style: const TextStyle(color: Colors.white),
@@ -266,6 +310,11 @@ class SearchWidget extends StatelessWidget {
   }
 }
 
+String hashString(String input) {
+  var hasher = md5.convert(utf8.encode(input));
+  return hasher.toString();
+}
+
 void getNewsList(reload) async {
   for (int i = 0; i < categories.length; i++) {
     String apiURL =
@@ -277,13 +326,18 @@ void getNewsList(reload) async {
         News news = News.fromJson(jsonResponse[j]);
         news.category = categories[i];
         news.isFeatured = Random().nextBool();
-        newsList.add(news);
+        String titleHash = hashString(news.title);
+        if (newsMap.containsKey(news.category!.name)) {
+          newsMap[news.category!.name].add(news);
+          // generate hash for news title
+        } else {
+          newsMap[news.category!.name] = [news];
+        }
+        newsMap['all'][titleHash] = news;
       }
       reload();
     }
   }
-  newsList.sort((a, b) => b.publishedAt.compareTo(a.publishedAt));
-  reload();
 }
 
 String truncate(String str, [int size = 80]) {
