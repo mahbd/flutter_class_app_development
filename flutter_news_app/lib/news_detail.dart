@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:date_time_format/date_time_format.dart';
 import 'package:flutter_news_app/news_model.dart';
 
@@ -25,23 +26,6 @@ class _NewsDetailState extends State<NewsDetail> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Text(widget.news.publishedAt.format(DateTimeFormats.american),
-                    style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.bold)),
-                Text('.${widget.news.category?.name}',
-                    style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.bold)),
-              ],
-            ),
-            Text(widget.news.title,
-                style:
-                    const TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.3,
               width: MediaQuery.of(context).size.width - 15,
@@ -50,12 +34,47 @@ class _NewsDetailState extends State<NewsDetail> {
                 child: Image.network(widget.news.urlToImage, fit: BoxFit.cover),
               ),
             ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+              child: Text(widget.news.title,
+                  style: const TextStyle(
+                      fontSize: 25, fontWeight: FontWeight.bold)),
+            ),
+            Text(
+              widget.news.author,
+              style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.bold),
+            ),
+            Text(widget.news.publishedAt.format(DateTimeFormats.american),
+                style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold)),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  widget.news.description,
-                  style: const TextStyle(fontSize: 17),
+                padding: const EdgeInsets.only(top: 10.0, right: 10),
+                child: Column(
+                  children: [
+                    Text(
+                      widget.news.description,
+                      style: const TextStyle(fontSize: 17),
+                      textAlign: TextAlign.justify,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      child: GestureDetector(
+                        child: const Text('Read more here'),
+                        onTap: () => _launchURL(widget.news.url),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -104,5 +123,9 @@ class _NewsDetailState extends State<NewsDetail> {
         ),
       ),
     );
+  }
+
+  void _launchURL(_url) async {
+    if (!await launch(_url)) throw 'Could not launch $_url';
   }
 }

@@ -37,6 +37,7 @@ dependencies:
   date_time_format: ^2.0.1
   http: ^0.13.4
   crypto: ^3.0.1
+  url_launcher: ^6.0.18
 
 dev_dependencies:
   flutter_test:

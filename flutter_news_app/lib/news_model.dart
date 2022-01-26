@@ -27,6 +27,7 @@ class News {
   final String description;
   final String urlToImage;
   final DateTime publishedAt;
+  final String url;
   bool isFeatured;
   List<Comment>? comments;
 
@@ -36,6 +37,7 @@ class News {
       required this.description,
       required this.urlToImage,
       required this.publishedAt,
+      required this.url,
       this.isFeatured = false,
       this.category,
       this.comments});
@@ -47,6 +49,7 @@ class News {
       description: json['description'] ?? '',
       urlToImage: json['urlToImage'] ?? '',
       publishedAt: DateTime.parse(json['publishedAt']),
+      url: json['url'] ?? '',
     );
   }
 
@@ -58,6 +61,7 @@ class News {
       'description': description,
       'urlToImage': urlToImage,
       'publishedAt': publishedAt.toIso8601String(),
+      'url': url,
       'isFeatured': isFeatured,
       'comments': comments?.map((comment) => comment.toJson()).toList(),
     };
