@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import '../category_model.dart';
 
 class TopicList extends StatelessWidget {
-  const TopicList({
-    Key? key,
-    required this.category,
-    required this.changeCategory,
-  }) : super(key: key);
+  const TopicList(
+      {Key? key,
+      required this.categories,
+      required this.changeCategory,
+      required this.currentCategory})
+      : super(key: key);
 
-  final List<Category> category;
+  final List<Category> categories;
+  final Category? currentCategory;
   final Function changeCategory;
 
   @override
@@ -21,17 +23,19 @@ class TopicList extends StatelessWidget {
           return const SizedBox(width: 10);
         },
         scrollDirection: Axis.horizontal,
-        itemCount: category.length,
+        itemCount: categories.length,
         itemBuilder: (context, index) {
           return MaterialButton(
             minWidth: 100,
             shape: const StadiumBorder(),
-            color: category[index].color,
+            color: currentCategory == categories[index]
+                ? Colors.black
+                : categories[index].color,
             onPressed: () {
-              changeCategory(category[index]);
+              changeCategory(categories[index]);
             },
             child: Text(
-              category[index].name,
+              categories[index].name,
               style: const TextStyle(color: Colors.white),
             ),
           );

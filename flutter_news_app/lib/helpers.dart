@@ -38,6 +38,24 @@ void getNewsList(reload) async {
   }
 }
 
+void getSearchedNewsList(String q, reload) async {
+  newsMap['search'] = {};
+  String apiURL =
+      "https://newsapi.org/v2/everything?q=$q&apiKey=$apiKey&pageSize=10";
+  final response = await http.get(Uri.parse(apiURL));
+  if (response.statusCode == 200) {
+    List<dynamic> jsonResponse = json.decode(response.body)['articles'];
+    for (int j = 0; j < jsonResponse.length; j++) {
+      News news = News.fromJson(jsonResponse[j]);
+      news.category = categories[0];
+      news.isFeatured = Random().nextBool();
+      String titleHash = hashString(news.title);
+      newsMap['search'][titleHash] = news;
+    }
+    reload();
+  }
+}
+
 String truncate(String str, [int size = 80]) {
   if (str.length > size) {
     return str.substring(0, size) + '...';

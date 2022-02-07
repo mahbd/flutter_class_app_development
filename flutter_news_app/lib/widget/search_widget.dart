@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 
-class SearchWidget extends StatelessWidget {
+class SearchWidget extends StatefulWidget {
   const SearchWidget({
     Key? key,
+    required this.updateSearchText,
   }) : super(key: key);
 
+  final Function updateSearchText;
+
+  @override
+  State<SearchWidget> createState() => _SearchWidgetState();
+}
+
+class _SearchWidgetState extends State<SearchWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -12,6 +20,7 @@ class SearchWidget extends StatelessWidget {
       child: SizedBox(
         height: 40,
         child: TextField(
+          onSubmitted: (value) => widget.updateSearchText(value),
           decoration: InputDecoration(
               isDense: true,
               filled: true,

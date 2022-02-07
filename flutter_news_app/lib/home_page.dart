@@ -1,15 +1,9 @@
-import 'dart:convert';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:date_time_format/date_time_format.dart';
-import 'package:crypto/crypto.dart';
+import 'package:flutter_news_app/news_list.dart';
 
 import 'category_model.dart';
-import 'const.dart';
 import 'helpers.dart';
 import 'news_model.dart';
-import 'news_detail.dart';
 import 'widget/featured_news.dart';
 import 'widget/search_widget.dart';
 import 'widget/topic_list.dart';
@@ -33,6 +27,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Category? selectedCategory;
+  String searchText = '';
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +41,13 @@ class _HomePageState extends State<HomePage> {
           }
           newsList.add(news);
         }
+      }
+    } else if (searchText != '') {
+      for (News news in newsMap['search'].values) {
+        if (news.isFeatured) {
+          featuredNews.add(news);
+        }
+        newsList.add(news);
       }
     } else {
       for (News news in newsMap['all'].values) {
@@ -66,7 +68,7 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SearchWidget(),
+          SearchWidget(updateSearchText: updateSearchText),
           SizedBox(
             height: 130,
             child: ListView.builder(
@@ -101,60 +103,14 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           TopicList(
-            category: categories,
+            categories: categories,
             changeCategory: changeCategory,
+            currentCategory: selectedCategory,
           ),
           const SizedBox(
             height: 10,
           ),
-          Expanded(
-            child: ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: newsList.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  child: ListTile(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => NewsDetail(
-                            news: newsList[index],
-                            toggleFeatured: () =>
-                                toggleFeatured(newsList[index]),
-                          ),
-                        ),
-                      );
-                    },
-                    leading: Hero(
-                      tag: 'news_${newsList[index].id}',
-                      child: Image.network(newsList[index].urlToImage),
-                    ),
-                    title: Text(
-                      truncate(newsList[index].title),
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    subtitle: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            newsList[index].author,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        // time difference from now
-                        Text(
-                          newsList[index].publishedAt.relative(),
-                          style: const TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          )
+          NewsList(newsList: newsList, toggleFeatured: toggleFeatured),
         ],
       ),
     );
@@ -168,6 +124,15 @@ class _HomePageState extends State<HomePage> {
   void changeCategory(Category category) {
     setState(() {
       selectedCategory = category;
+      searchText = '';
     });
+  }
+
+  void updateSearchText(String text) {
+    setState(() {
+      searchText = text;
+      selectedCategory = null;
+    });
+    getSearchedNewsList(searchText, reload);
   }
 }

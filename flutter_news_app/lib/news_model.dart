@@ -69,4 +69,4 @@ class News {
 }
 
 // list of news
-Map<String, dynamic> newsMap = {'all': {}};
+Map<String, dynamic> newsMap = {'all': {}, 'search': {}};
